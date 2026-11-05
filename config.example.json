@@ -1,0 +1,22 @@
+{
+  "listen_host": "0.0.0.0",
+  "listen_port": 502,
+  "device_host": "192.168.1.100",
+  "device_port": 502,
+  "web_host": "0.0.0.0",
+  "web_port": 8080,
+  "connect_timeout": 3.0,
+  "response_timeout": 5.0,
+  "idle_close": 60.0,
+  "timeout_policy": "drop",
+  "address_offset": 0,
+  "auto_start": true,
+  "auto_open_browser": true,
+  "record": {
+    "enabled": true,
+    "dir": "captures",
+    "flush": true,
+    "rotate_mb": 64,
+    "keep_days": 7
+  }
+}

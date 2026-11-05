@@ -1,0 +1,22 @@
+{
+  "listen_host": "127.0.0.1",
+  "listen_port": 15002,
+  "device_host": "127.0.0.1",
+  "device_port": 15020,
+  "web_host": "127.0.0.1",
+  "web_port": 18080,
+  "connect_timeout": 2.0,
+  "response_timeout": 3.0,
+  "idle_close": 30.0,
+  "timeout_policy": "drop",
+  "address_offset": 0,
+  "auto_start": true,
+  "auto_open_browser": false,
+  "record": {
+    "enabled": true,
+    "dir": "captures",
+    "flush": true,
+    "rotate_mb": 8,
+    "keep_days": 2
+  }
+}

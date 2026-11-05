@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Modbus TCP 监视器</title>
+<link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+<header class="top">
+  <div class="brand"><span class="logo">MT</span>Modbus TCP 监视器<span class="ver" id="ver"></span></div>
+  <div class="status">
+    <span class="pill" id="pill-listen"><i></i><b>监听</b><em>--</em></span>
+    <span class="pill" id="pill-client"><i></i><b>平台</b><em>--</em></span>
+    <span class="pill" id="pill-device"><i></i><b>设备</b><em>--</em></span>
+  </div>
+  <div class="grow"></div>
+  <button class="btn" id="btn-power">停止监听</button>
+</header>
+
+<main>
+  <aside class="side">
+    <section class="card">
+      <h2>连接配置</h2>
+      <div class="grid2">
+        <label>监听地址<input id="c-listen_host" spellcheck="false" autocomplete="off"></label>
+        <label>监听端口<input id="c-listen_port" type="number" min="1" max="65535"></label>
+        <label>设备地址<input id="c-device_host" spellcheck="false" autocomplete="off"></label>
+        <label>设备端口<input id="c-device_port" type="number" min="1" max="65535"></label>
+      </div>
+      <div class="grid2">
+        <label>连接超时(秒)<input id="c-connect_timeout" type="number" step="0.5" min="0.2"></label>
+        <label>应答超时(秒)<input id="c-response_timeout" type="number" step="0.5" min="0.2"></label>
+        <label>空闲断开(秒)<input id="c-idle_close" type="number" step="1" min="0"></label>
+        <label>超时策略<select id="c-timeout_policy">
+          <option value="drop">丢弃不响应</option>
+          <option value="exception">回 0x0B 异常</option>
+        </select></label>
+      </div>
+      <label class="chk"><input type="checkbox" id="c-record_enabled"> 记录收发数据到本地</label>
+      <p class="hint" id="web-hint">网页端口 8080（修改需重启程序）</p>
+      <button class="btn primary" id="btn-save">保存并应用</button>
+      <p class="msg" id="save-msg"></p>
+    </section>
+
+    <section class="card">
+      <h2>运行状态</h2>
+      <dl class="stats" id="stats"></dl>
+    </section>
+
+    <section class="card">
+      <h2>数据记录</h2>
+      <p class="path" id="rec-path">--</p>
+      <button class="btn" id="btn-open">打开记录目录</button>
+    </section>
+  </aside>
+
+  <section class="content">
+    <div class="toolbar">
+      <select id="f-dir">
+        <option value="">全部方向</option>
+        <option value="up">平台→设备</option>
+        <option value="down">设备→平台</option>
+        <option value="gw">网关→平台</option>
+      </select>
+      <select id="f-fc">
+        <option value="">全部功能码</option>
+        <option value="1">0x01 读线圈</option>
+        <option value="2">0x02 读离散输入</option>
+        <option value="3">0x03 读保持寄存器</option>
+        <option value="4">0x04 读输入寄存器</option>
+        <option value="5">0x05 写单线圈</option>
+        <option value="6">0x06 写单寄存器</option>
+        <option value="15">0x0F 写多线圈</option>
+        <option value="16">0x10 写多寄存器</option>
+        <option value="23">0x17 读写多寄存器</option>
+      </select>
+      <input id="f-q" placeholder="搜索 地址 / TID / HEX / 摘要" spellcheck="false" autocomplete="off">
+      <label class="chk"><input type="checkbox" id="f-bad"> 只看异常</label>
+      <button class="btn" id="btn-pause">暂停显示</button>
+      <button class="btn" id="btn-clear">清屏</button>
+      <button class="btn" id="btn-export">导出 CSV</button>
+      <span class="count" id="count"></span>
+    </div>
+
+    <div class="table-wrap" id="table-wrap">
+      <table>
+        <thead>
+          <tr><th class="w-time">时间</th><th class="w-dir">方向</th><th class="w-tid">TID</th><th class="w-fc">FC</th><th>摘要</th><th class="w-rtt">RTT</th></tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+      <div class="empty" id="empty">等待收发数据…</div>
+    </div>
+
+    <button class="jump" id="btn-jump" hidden>↓ 有新数据，回到底部</button>
+
+    <div class="detail" id="detail" hidden>
+      <div class="detail-head">
+        <strong id="d-title">报文详情</strong>
+        <span class="grow"></span>
+        <span class="d-sub" id="d-sub"></span>
+        <button class="btn ghost" id="btn-detail-close">关闭</button>
+      </div>
+      <div class="detail-body">
+        <div class="col">
+          <h3>字段</h3>
+          <dl id="d-fields"></dl>
+        </div>
+        <div class="col">
+          <h3>报文 HEX</h3>
+          <div class="hexdump" id="d-hex"></div>
+        </div>
+        <div class="col" id="d-vals-col">
+          <h3>寄存器 / 位</h3>
+          <div class="vals" id="d-vals"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="toast" id="toast"></div>
+<script src="/app.js"></script>
+</body>
+</html>
